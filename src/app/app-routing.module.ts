@@ -6,14 +6,15 @@ import {LoginComponent} from "./login/login/login.component";
 
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent},
-  { path: 'home', component: DashboardComponent},
-  { path: 'not-found', component: NotFoundComponent},
-  { path: '**', redirectTo: '/not-found'}
+  {path: 'login', component: LoginComponent},
+  {path: 'home', component: DashboardComponent},
+  {path: 'not-found', component: NotFoundComponent},
+  {path: '**', redirectTo: '/not-found'}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

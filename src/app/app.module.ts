@@ -1,26 +1,34 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
+import {AppRoutingModule} from './app-routing.module';
 
-import { AppComponent } from './app.component';
-import { DashboardComponent } from './home/dashboard/dashboard.component';
-import { NotFoundComponent } from './not-found/not-found/not-found.component';
-import { LoginComponent } from './login/login/login.component';
+import {AppComponent} from './app.component';
+import {DashboardComponent} from './home/dashboard/dashboard.component';
+import {NotFoundComponent} from './not-found/not-found/not-found.component';
+import {LoginComponent} from './login/login/login.component';
+import {FormsModule} from "@angular/forms";
+import {AuthService} from "./auth.service";
+import {HttpModule} from "@angular/http";
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    DashboardComponent,
-    NotFoundComponent,
-    LoginComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		DashboardComponent,
+		NotFoundComponent,
+		LoginComponent
+	],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		FormsModule,
+		HttpModule
+	],
+	providers: [
+		AuthService
+	],
+	bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
