@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import {Router} from "@angular/router";
-import {Http} from "@angular/http";
-import {Observable} from "rxjs/Observable";
-import {environment} from "../environments/environment";
-import LoggedUser from "./models/logged-user.model";
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {environment} from '../environments/environment';
+import LoggedUser from './models/logged-user.model';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +10,20 @@ export class AuthService {
 	email: string;
 	password: string;
 
-	constructor(private http: Http, private router: Router) {
+	constructor(private http: HttpClient) {
+	}
+
+	static getLoggedUser(): LoggedUser {
+		const awesomeUser: string = localStorage.getItem('awesomeUser');
+		return <LoggedUser> JSON.parse(awesomeUser);
+	}
+
+	static setLoggedUser(loggedUser: LoggedUser) {
+		localStorage.setItem('awesomeUser', JSON.stringify(loggedUser));
+	}
+
+	static removeLoggedUser() {
+		localStorage.removeItem('awesomeUser');
 	}
 
 	sendCredentials(email: string, password: string): Observable<any> {
@@ -25,18 +37,4 @@ export class AuthService {
 		});
 
 	}
-
-	getLoggedUser(): LoggedUser {
-		const awesomeUser: string = localStorage.getItem('awesomeUser');
-		return <LoggedUser> JSON.parse(awesomeUser);
-	}
-
-	setLoggedUser(loggedUser: LoggedUser) {
-		localStorage.setItem('awesomeUser', JSON.stringify(loggedUser));
-	}
-
-	removeLoggedUser() {
-		localStorage.removeItem('awesomeUser');
-	}
-
 }

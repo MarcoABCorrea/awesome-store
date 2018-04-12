@@ -1,4 +1,4 @@
-import {Roles} from "../enum/roles.enum";
+import {Roles} from '../enum/roles.enum';
 
 export default class LoggedUser {
 	name: string;

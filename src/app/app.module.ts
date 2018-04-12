@@ -7,9 +7,12 @@ import {AppComponent} from './app.component';
 import {DashboardComponent} from './home/dashboard/dashboard.component';
 import {NotFoundComponent} from './not-found/not-found/not-found.component';
 import {LoginComponent} from './login/login/login.component';
-import {FormsModule} from "@angular/forms";
-import {AuthService} from "./auth.service";
-import {HttpModule} from "@angular/http";
+import {FormsModule} from '@angular/forms';
+import {AuthService} from './auth.service';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http'; // replaces previous Http service
+import {ProdutosComponent} from './produtos/produtos/produtos.component';
+import {Interceptor} from './shared/interceptor';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 @NgModule({
@@ -17,16 +20,23 @@ import {HttpModule} from "@angular/http";
 		AppComponent,
 		DashboardComponent,
 		NotFoundComponent,
-		LoginComponent
+		LoginComponent,
+		ProdutosComponent
 	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 		FormsModule,
-		HttpModule
+		HttpClientModule,
+		NgxPaginationModule
 	],
 	providers: [
-		AuthService
+		AuthService,
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: Interceptor,
+			multi: true
+		}
 	],
 	bootstrap: [AppComponent]
 })

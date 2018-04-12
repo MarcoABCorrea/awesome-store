@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import LoggedUser from "./models/logged-user.model";
-import {Router} from "@angular/router";
-import {AuthService} from "./auth.service";
+import LoggedUser from './models/logged-user.model';
+import {Router} from '@angular/router';
+import {AuthService} from './auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -12,11 +12,10 @@ export class AppComponent implements OnInit {
 	private loggedUser: LoggedUser = new LoggedUser();
 
 	ngOnInit() {
-		this.loggedUser = this.authService.getLoggedUser();
+		this.loggedUser = AuthService.getLoggedUser();
 	}
 
-	constructor(private router: Router,
-				private authService: AuthService) {
+	constructor(private router: Router) {
 	}
 
 	public hasLoggedUser() {
@@ -25,7 +24,7 @@ export class AppComponent implements OnInit {
 
 	public logout() {
 		this.router.navigate(['login']);
-		this.authService.removeLoggedUser();
+		AuthService.removeLoggedUser();
 		this.loggedUser = null;
 	}
 }

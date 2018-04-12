@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {AuthService} from "../../auth.service";
-import LoggedUser from "../../models/logged-user.model";
-import {default as swal} from "sweetalert2";
-import {environment} from "../../../environments/environment";
-import {Headers, Http} from "@angular/http";
+import {AuthService} from '../../auth.service';
+import LoggedUser from '../../models/logged-user.model';
+import {default as swal} from 'sweetalert2';
+import {environment} from '../../../environments/environment';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
 	selector: 'app-login',
@@ -13,12 +13,13 @@ import {Headers, Http} from "@angular/http";
 })
 export class LoginComponent {
 
+	protected token: string;
 	protected login = {
 		username: null,
 		password: null
 	};
 
-	constructor(private authService: AuthService, private http: Http) {
+	constructor(private authService: AuthService, private http: HttpClient) {
 	}
 
 	signin() {
@@ -29,7 +30,10 @@ export class LoginComponent {
 		} else {
 			this.authService.sendCredentials(this.login.username, this.login.password)
 				.subscribe(success => {
-					this.getCompleteUser(success.json().token);
+					this.token = success.token;
+					const logged: LoggedUser = new LoggedUser(null, success.token);
+					AuthService.setLoggedUser(logged);
+					this.getCompleteUser();
 				}, error => {
 					if (error.status === 401) {
 						swal('Acesso negado!', 'Login e/ou senha inválidos. Tente novamente.', 'error');
@@ -40,18 +44,13 @@ export class LoginComponent {
 
 	/**
 	 * Purpose: Recupera o objeto usuário utilizando o email e salva os dados deste no localStorage
-	 * @param {string} token
 	 */
-	getCompleteUser(token: string) {
-		let header: Headers = new Headers();
-		header.append('Authorization', 'Bearer ' + token);
-		this.http.get(`${environment.api}/users?email=${this.login.username}`, {
-			headers: header
-		}).subscribe(success => {
-			const user: any = success.json()[0];
-			const logged: LoggedUser = new LoggedUser(user.name, token, user.roles);
-			this.authService.setLoggedUser(logged);
+	getCompleteUser() {
+		this.http.get(`${environment.api}/users?email=${this.login.username}`).subscribe(success => {
+			const user: any = success[0];
+			const logged: LoggedUser = new LoggedUser(user.name, this.token, user.roles);
+			AuthService.setLoggedUser(logged);
 			location.href = '/home';
-		})
+		});
 	}
 }
