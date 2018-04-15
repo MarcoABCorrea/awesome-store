@@ -57,7 +57,7 @@
 								<tr *ngFor="let prod of produtos | paginate: config; let $index=index"
 									[ngClass]="{'even': $index % 2 == 0, 'odd': $index % 2 != 0}">
 									<td>
-										<a [routerLink]="'/produto/' + prod.id">{{prod.name}}</a>
+										{{prod.name}}
 									</td>
 									<td>
 										{{prod.category}}
@@ -78,7 +78,6 @@
 
 								<nav>
 									<div class="row">
-
 										<div class="col-lg-12 text-right">
 											<ul class="pagination">
 												<li [class.disabled]="p.isFirstPage()">

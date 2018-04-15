@@ -1,10 +1,11 @@
 @import "table";
+
 #page-wrapper {
-  padding: 0 15px;
+	padding: 0 15px;
 }
 
 li.nav-item.active {
-  font-weight: 500;
+	font-weight: 500;
 }
 
 .panel {
@@ -42,6 +43,7 @@ li.nav-item.active {
 }
 
 .page-header {
+	color: #000000ad;
 	padding-bottom: 9px;
 	margin: 20px 0 20px;
 	border-bottom: 1px solid #eeeeee;

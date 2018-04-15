@@ -1,10 +1,57 @@
 <div id="page-wrapper">
-	<div class="row">
-		<div class="col-lg-12">
-			<h1 class="page-header">Dashboard</h1>
-		</div>
+	<div class="col-lg-12">
+		<h1 class="page-header">Dashboard</h1>
 	</div>
 
+	<div class="row"></div>
+
 	<div class="page-body">
+		<fieldset>
+			<legend>Vendas</legend>
+			<div class="row">
+
+				<div class="col-md-12 col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<span class="panel-title">Vendas por dispositivos
+								<small>últimos 30 dias</small></span>
+						</div>
+						<div class="panel-body">
+							<canvas baseChart [data]="deviceData" [labels]="deviceLabels" [colors]="chartColors"
+									[chartType]="'doughnut'">
+							</canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 col-lg-6" *ngIf="showChart">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<span class="panel-title">Vendas
+							<small>últimos 3 meses</small></span>
+						</div>
+						<div class="panel-body">
+							<canvas id="burnDownChart" baseChart [datasets]="burnDownData" [options]="chartOptions"
+									[labels]="burnDownLabels"
+									[legend]="true" [colors]="chartColors" [chartType]="'line'">
+							</canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 col-lg-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h5 class="panel-title">Conversão do checkout</h5>
+						</div>
+						<div class="panel-body">
+							<canvas baseChart [data]="checkoutData" [labels]="checkoutLabels" [colors]="chartColors"
+									[chartType]="'doughnut'">
+							</canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
 	</div>
 </div>

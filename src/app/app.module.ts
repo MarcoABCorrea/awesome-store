@@ -13,6 +13,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http'; // rep
 import {ProdutosComponent} from './produtos/produtos/produtos.component';
 import {Interceptor} from './shared/interceptor';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { ChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
 		AppRoutingModule,
 		FormsModule,
 		HttpClientModule,
-		NgxPaginationModule
+		NgxPaginationModule,
+		ChartsModule
 	],
 	providers: [
 		AuthService,
