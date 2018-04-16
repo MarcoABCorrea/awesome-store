@@ -3,10 +3,8 @@
 		<h1 class="page-header">Dashboard</h1>
 	</div>
 
-	<div class="row"></div>
-
 	<div class="page-body">
-		<fieldset>
+		<fieldset *ngIf="hasPermission()">
 			<legend>Vendas por dispositivo</legend>
 			<div class="row">
 				<div class="col-md-12 col-lg-6">

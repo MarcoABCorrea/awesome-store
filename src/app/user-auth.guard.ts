@@ -15,7 +15,7 @@ export class UserAuthGuard implements CanActivate {
 		}
 
 		if (AuthService.getLoggedUser() && route.routeConfig.path === 'login') {
-			this.router.navigate(['']);
+			this.router.navigate(['home']);
 		}
 
 		return true;

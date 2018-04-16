@@ -5,6 +5,9 @@ import {PurchaseService} from '../../purchase/purchase.service';
 import {Utils} from '../../shared/utils';
 import * as moment from 'moment';
 import {default as swal} from 'sweetalert2';
+import {AuthService} from '../../auth.service';
+import LoggedUser from '../../models/logged-user.model';
+import {Roles} from '../../enum/roles.enum';
 
 @Component({
 	selector: 'app-dashboard',
@@ -48,6 +51,11 @@ export class DashboardComponent implements OnInit {
 	}
 
 	ngOnInit() {
+	}
+
+	hasPermission() {
+		const user: LoggedUser = AuthService.getLoggedUser();
+		return user.roles.find(role => +Roles[role] !== Roles.SUPORT);
 	}
 
 	getLast30DaysPurchases() {
