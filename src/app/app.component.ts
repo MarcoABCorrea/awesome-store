@@ -10,6 +10,7 @@ import {AuthService} from './auth.service';
 })
 export class AppComponent implements OnInit {
 	private loggedUser: LoggedUser = new LoggedUser();
+	private hasPermission = AuthService.hasPermission();
 
 	ngOnInit() {
 		this.loggedUser = AuthService.getLoggedUser();

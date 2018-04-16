@@ -8,7 +8,7 @@
 	<div class="page-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="table-wrapper">
+				<div class="table-wrapper" *ngIf="produtos">
 					<div class="panel panel-default table-wrapper">
 						<div class="table-wrapper-header">
 							<div class="row">
@@ -74,7 +74,7 @@
 						</div>
 						<div class="table-wrapper-footer">
 							<pagination-template #p="paginationApi" [id]="config.id"
-												 (pageChange)="config.currentPage = $event">
+												 (pageChange)="onPageChange($event)">
 
 								<nav>
 									<div class="row">

@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ProdutosService} from '../produtos.service';
 import {Produto} from '../../models/produto.model';
 import {default as swal} from 'sweetalert2';
-import * as _ from 'lodash';
 import {PaginationInstance} from 'ngx-pagination';
 
 @Component({
@@ -13,19 +12,25 @@ import {PaginationInstance} from 'ngx-pagination';
 })
 export class ProdutosComponent implements OnInit {
 
-	protected produtos: Produto[] = [];
-	protected config: PaginationInstance = {
-		id: 'custom',
-		itemsPerPage: 10,
-		currentPage: 1,
-	};
+	protected produtos: Produto[];
+	protected config: PaginationInstance;
+	protected fieldname: string;
+	protected order: string;
 
 	constructor(private produtosService: ProdutosService) {
-		this.produtosService.getAllProducts().subscribe(
+		this.produtosService.getProducts().subscribe(
 			(response) => {
-				this.produtos = response as Produto[];
+				const totalItems = +response.headers.get('x-total-count');
+				this.produtos = response.body as Produto[];
+
+				this.config = {
+					id: 'produtos',
+					itemsPerPage: 10,
+					currentPage: 1,
+					totalItems: totalItems
+				};
 			},
-			(error) => {
+			() => {
 				swal('Erro!', 'Ocorreu um erro ao retornar Produtos!', 'error');
 			});
 	}
@@ -34,6 +39,19 @@ export class ProdutosComponent implements OnInit {
 	}
 
 	sortProducts(fieldname, order) {
-		this.produtos = _.orderBy(this.produtos, [fieldname], [order]);
+		this.fieldname = fieldname;
+		this.order = order;
+		this.onPageChange(1);
+	}
+
+	onPageChange(number: number) {
+		this.produtosService.getProductsOffset((number - 1) * this.config.itemsPerPage, this.fieldname, this.order).subscribe(
+			(response: Array<Produto>) => {
+				this.produtos = response;
+				this.config.currentPage = number;
+			},
+			() => {
+				swal('Erro!', 'Ocorreu um erro ao retornar Produtos!', 'error');
+			});
 	}
 }

@@ -3,6 +3,7 @@ import {Observable} from 'rxjs/Observable';
 import {environment} from '../environments/environment';
 import LoggedUser from './models/logged-user.model';
 import {HttpClient} from '@angular/common/http';
+import {Roles} from './enum/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,15 @@ export class AuthService {
 
 	static removeLoggedUser() {
 		localStorage.removeItem('awesomeUser');
+	}
+
+	/**
+	 * Purpose: User that contains role='SUPORT' is not allowed to see some contents
+	 * @returns {boolean}
+	 */
+	static hasPermission() {
+		const user: LoggedUser = AuthService.getLoggedUser();
+		return user ? user.roles.indexOf(Roles[Roles.SUPORT]) === -1 : false;
 	}
 
 	sendCredentials(email: string, password: string): Observable<any> {

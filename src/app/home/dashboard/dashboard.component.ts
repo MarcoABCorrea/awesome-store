@@ -54,8 +54,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	hasPermission() {
-		const user: LoggedUser = AuthService.getLoggedUser();
-		return user.roles.find(role => +Roles[role] !== Roles.SUPORT);
+		return AuthService.hasPermission();
 	}
 
 	getLast30DaysPurchases() {

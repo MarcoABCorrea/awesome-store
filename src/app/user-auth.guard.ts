@@ -18,6 +18,11 @@ export class UserAuthGuard implements CanActivate {
 			this.router.navigate(['home']);
 		}
 
+		if (!AuthService.hasPermission() && route.routeConfig.path === 'produtos') {
+			this.router.navigate(['home']);
+			return false;
+		}
+
 		return true;
 	}
 }
