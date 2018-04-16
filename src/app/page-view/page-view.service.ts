@@ -8,7 +8,7 @@ export class PageViewService {
 	constructor(private httpClient: HttpClient) {
 	}
 
-	getAllPageViews() {
-		return this.httpClient.get(`${environment.api}/pageViews`);
+	getCheckoutByPeriod(startDate: number) {
+		return this.httpClient.get(`${environment.api}/pageViews?pageType=checkout&datetime_gte=${startDate}`);
 	}
 }

@@ -12,6 +12,6 @@ export class PurchaseService {
 		if (endDate !== '') {
 			endDate = '&datetime_lte=' + endDate;
 		}
-		return this.httpClient.get(`${environment.api}/purchases?datetime_gte=${startDate}${endDate}`);
+		return this.httpClient.get(`${environment.api}/purchases?purchaseStatus=approved&datetime_gte=${startDate}${endDate}`);
 	}
 }

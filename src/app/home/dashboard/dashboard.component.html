@@ -7,14 +7,14 @@
 
 	<div class="page-body">
 		<fieldset>
-			<legend>Vendas</legend>
+			<legend>Vendas por dispositivo</legend>
 			<div class="row">
-
 				<div class="col-md-12 col-lg-6">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<span class="panel-title">Vendas por dispositivos
-								<small>últimos 30 dias</small></span>
+							<span class="panel-title">
+								Últimos 30 dias
+							</span>
 						</div>
 						<div class="panel-body">
 							<canvas baseChart [data]="deviceData" [labels]="deviceLabels" [colors]="chartColors"
@@ -23,30 +23,34 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-12 col-lg-6" *ngIf="showChart">
+				<div class="col-md-12 col-lg-6" *ngIf="showBurnDownChart">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<span class="panel-title">Vendas
-							<small>últimos 3 meses</small></span>
+							<span class="panel-title">
+								Últimos 3 meses
+							</span>
 						</div>
 						<div class="panel-body">
-							<canvas id="burnDownChart" baseChart [datasets]="burnDownData" [options]="chartOptions"
-									[labels]="burnDownLabels"
-									[legend]="true" [colors]="chartColors" [chartType]="'line'">
+							<canvas id="burnDownChart" baseChart [datasets]="burnDownData" [options]="burnDownOptions"
+									[labels]="burnDownLabels" [colors]="lineChartColors" [chartType]="'line'">
 							</canvas>
 						</div>
 					</div>
 				</div>
 			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>Checkout</legend>
 			<div class="row">
-				<div class="col-md-12 col-lg-4">
+				<div class="col-md-12 col-lg-6" *ngIf="showCheckoutChart">
 					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h5 class="panel-title">Conversão do checkout</h5>
+						<div class="panel-heading">Checkout X Origem (Porcentagem %)
+							<small>últimos 3 meses</small>
 						</div>
 						<div class="panel-body">
-							<canvas baseChart [data]="checkoutData" [labels]="checkoutLabels" [colors]="chartColors"
-									[chartType]="'doughnut'">
+							<canvas baseChart [datasets]="checkoutData" [labels]="checkoutLabels" [colors]="lineChartColors"
+									[options]="checkoutOptions" [chartType]="'bar'">
 							</canvas>
 						</div>
 					</div>

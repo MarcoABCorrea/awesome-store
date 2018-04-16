@@ -1,10 +1,9 @@
-import {Component, OnInit, ViewChildren, QueryList} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {PageViewService} from '../../page-view/page-view.service';
 import {PurchaseService} from '../../purchase/purchase.service';
 import {Utils} from '../../shared/utils';
 import * as moment from 'moment';
-import {BaseChartDirective} from 'ng2-charts';
 import {default as swal} from 'sweetalert2';
 
 @Component({
@@ -15,80 +14,33 @@ import {default as swal} from 'sweetalert2';
 })
 export class DashboardComponent implements OnInit {
 
-	@ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective>;
-	protected burnDownChart: BaseChartDirective;
+	// Chart colors
 	protected chartColors = Utils.getColorsOptions();
-
-	// Checkout
-	protected checkoutData: number[] = [];
-	protected checkoutLabels: string[] = [];
+	protected lineChartColors = Utils.getColorsOptionsForLineChart();
 
 	// Purchase
-	showChart = false;
+	protected burnDownOptions = Utils.getChartOptions('left', 500, 50);
+	protected showBurnDownChart = false;
 	protected deviceData: number[] = [];
 	protected deviceLabels: string[] = [];
 	protected burnDownData: Array<any> = [];
 	protected burnDownLabels: string[] = [];
-	protected chartOptions = Utils.getChartOptions();
+
+	// Checkout
+	protected checkoutOptions = Utils.getChartOptions('top', 0, 20);
+	protected showCheckoutChart = false;
+	protected checkoutData: Array<any> = [];
+	protected checkoutLabels: string[] = [];
 
 	constructor(private pageViewService: PageViewService,
 				private purchaseService: PurchaseService) {
 		moment.locale('pt-br');
-		this.getCheckoutChartData();
 		this.getLast30DaysPurchases();
 		this.getBurnDownChartData();
+		this.getCheckoutChartData();
 	}
 
 	ngOnInit() {
-
-	}
-
-	getCheckoutChartData() {
-		this.pageViewService.getAllPageViews().subscribe(
-			(response) => {
-				// const data = {};
-
-				// for (const pageView of response) {
-				// 	if (data[pageView.page]) {
-				// 		if (pageView.pageType === 'purchase') {
-				// 			data[pageView.page].purchase = data[pageView.page].purchase + 1;
-				// 		} else {
-				// 			data[pageView.page].checkout = data[pageView.page].checkout + 1;
-				// 		}
-				// 	} else {
-				// 		data[pageView.page] = {
-				// 			purchase: 0,
-				// 			checkout: 0
-				// 		};
-				// 	}
-				// }
-
-				const pageTypes = _.countBy(response, 'pageType');
-
-				// _.mapKeys(data, (value, key) => {
-				// 	this.checkoutLabels.push(key);
-				// 	this.checkoutData.push(value.checkout / value.purchase);
-				// });
-
-				// _.mapKeys(pageTypes, (value, key) => {
-				// 	this.checkoutLabels.push(key);
-				// 	this.checkoutData.push(value.checkout / value.purchase);
-				// });
-
-				// ['purchase', 'checkout'].map(label => {
-				// 	this.checkoutLabels.push(label);
-				// });
-
-				_.keys(pageTypes).map((label) => {
-					this.checkoutLabels.push(_.capitalize(label));
-				});
-
-				this.checkoutData = _.values(pageTypes);
-			},
-			(error) => {
-				console.error(error);
-			}
-		);
 	}
 
 	getLast30DaysPurchases() {
@@ -113,7 +65,7 @@ export class DashboardComponent implements OnInit {
 		const referenceMonth = moment(thisMonth).subtract(2, 'month');
 
 		this.purchaseService.getPurchasesByPeriod(referenceMonth.valueOf()).subscribe(
-			(response) => {
+			(response: Array<any>) => {
 
 				for (let i = 2; i >= 0; i--) {
 					this.burnDownLabels.push(_.capitalize(moment(thisMonth).subtract(i, 'month').format('MMMM')));
@@ -141,9 +93,66 @@ export class DashboardComponent implements OnInit {
 					this.burnDownData[i] = {data: _.values(data[device]), label: _.capitalize(device)};
 				});
 
-				this.showChart = true;
+				this.showBurnDownChart = true;
 			}, () => {
 				swal('Erro!', 'Ocorreu um erro ao retornar Vendas por período!', 'error');
 			});
+	}
+
+	getCheckoutChartData() {
+		const thisMonth = moment().startOf('month');
+		const referenceMonth = moment(thisMonth).subtract(2, 'month');
+
+		this.pageViewService.getCheckoutByPeriod(referenceMonth.valueOf()).subscribe(
+			(response: Array<any>) => {
+
+				for (let i = 2; i >= 0; i--) {
+					this.checkoutLabels.push(_.capitalize(moment(thisMonth).subtract(i, 'month').format('MMMM')));
+				}
+
+				const dataTotal = {};
+
+				for (const checkout of response) {
+					const date = moment(checkout.datetime).format('MM');
+
+					if (!dataTotal[checkout.trafficOrigin]) {
+						dataTotal[checkout.trafficOrigin] = {first: 0, second: 0, third: 0};
+					}
+
+					if (date === referenceMonth.format('MM')) {
+						dataTotal[checkout.trafficOrigin].first++;
+					} else if (date === moment(thisMonth).subtract(1, 'month').format('MM')) {
+						dataTotal[checkout.trafficOrigin].second++;
+					} else if (date === thisMonth.format('MM')) {
+						dataTotal[checkout.trafficOrigin].third++;
+					}
+				}
+
+				const totalFirst = _.sumBy(_.values(dataTotal), 'first');
+				const totalSecond = _.sumBy(_.values(dataTotal), 'second');
+				const totalThird = _.sumBy(_.values(dataTotal), 'third');
+				const dataPercentage = {};
+				_.keys(dataTotal).map((trafficOrigin) => {
+					dataPercentage[trafficOrigin] = {
+						first: this.getPercentage(dataTotal[trafficOrigin].first, totalFirst),
+						second: this.getPercentage(dataTotal[trafficOrigin].second, totalSecond),
+						third: this.getPercentage(dataTotal[trafficOrigin].third, totalThird)
+					};
+				});
+
+				_.keys(dataPercentage).map((trafficOrigin, i) => {
+					this.checkoutData[i] = {data: _.values(dataPercentage[trafficOrigin]), label: _.capitalize(trafficOrigin)};
+				});
+
+				this.showCheckoutChart = true;
+			},
+			() => {
+				swal('Erro!', 'Ocorreu um erro ao retornar page views!', 'error');
+			}
+		);
+	}
+
+	getPercentage(value: number, total: number) {
+		return Number((value / total) * 100).toFixed(2);
 	}
 }

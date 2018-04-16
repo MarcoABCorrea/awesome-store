@@ -48,6 +48,26 @@ export class Utils {
 				hoverBorderColor: 'rgba(43, 43, 43, 0.5)',
 				hoverBorderWidth: 2,
 				maintainAspectRatio: false
+			}
+		];
+	}
+
+	/**
+	 * Purpose: Default chart color options
+	 * @param colors the colors of the chart, if not is passed the default colors is going to be used
+	 * Used on Line and Bar Charts
+	 * @returns {Array<any>}
+	 */
+	public static getColorsOptionsForLineChart(): Array<any> {
+		return [
+			{
+				backgroundColor: Utils.getColors()[0],
+				borderColor: 'rgba(43, 43, 43, 0.2)',
+				borderWidth: 1,
+				hoverBackgroundColor: undefined,
+				hoverBorderColor: 'rgba(43, 43, 43, 0.5)',
+				hoverBorderWidth: 2,
+				maintainAspectRatio: false
 			}, {
 				backgroundColor: Utils.getColors()[1],
 				borderColor: 'rgba(43, 43, 43, 0.2)',
@@ -65,21 +85,34 @@ export class Utils {
 				hoverBorderColor: 'rgba(43, 43, 43, 0.5)',
 				hoverBorderWidth: 2,
 				maintainAspectRatio: false
+			},
+			{
+				backgroundColor: Utils.getColors()[3],
+				borderColor: 'rgba(43, 43, 43, 0.2)',
+				borderWidth: 1,
+				hoverBackgroundColor: undefined,
+				hoverBorderColor: 'rgba(43, 43, 43, 0.5)',
+				hoverBorderWidth: 2,
+				maintainAspectRatio: false
 			}
 		];
 	}
 
 	/**
 	 * Purpose: Options for bar and line charts
-	 * @param legend position in which the legend will be displayed (use null if you don't want to display the legend)
+	 * @param {string} legend position in which the legend will be displayed (use null if you don't want to display the legend)
+	 * @param {number} min is the minimum value of the chart
+	 * @param {number} stepSize is the incremental value for the chart
+	 * @returns {any}
 	 */
-	public static getChartOptions(legend: string = 'left'): any {
+	public static getChartOptions(legend: string, min: number, stepSize: number): any {
 		return {
 			scales: {
 				yAxes: [{
 					ticks: {
-						beginAtZero: true,
-						stepSize: 500
+						beginAtZero: false,
+						min: min,
+						stepSize: stepSize
 					}
 				}]
 			},
