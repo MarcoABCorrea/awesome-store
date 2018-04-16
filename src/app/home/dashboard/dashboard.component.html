@@ -4,7 +4,7 @@
 	</div>
 
 	<div class="page-body">
-		<fieldset *ngIf="hasPermission()">
+		<fieldset *ngIf="hasPermission">
 			<legend>Vendas por dispositivo</legend>
 			<div class="row">
 				<div class="col-md-12 col-lg-6">
@@ -47,7 +47,8 @@
 							<small>últimos 3 meses</small>
 						</div>
 						<div class="panel-body">
-							<canvas baseChart [datasets]="checkoutData" [labels]="checkoutLabels" [colors]="lineChartColors"
+							<canvas baseChart [datasets]="checkoutData" [labels]="checkoutLabels"
+									[colors]="lineChartColors"
 									[options]="checkoutOptions" [chartType]="'bar'">
 							</canvas>
 						</div>
@@ -59,7 +60,8 @@
 							<small>últimos 3 meses</small>
 						</div>
 						<div class="panel-body">
-							<canvas baseChart [datasets]="conversionData" [labels]="conversionLabels" [colors]="lineChartColors"
+							<canvas baseChart [datasets]="conversionData" [labels]="conversionLabels"
+									[colors]="lineChartColors"
 									[options]="conversionOptions" [chartType]="'bar'">
 							</canvas>
 						</div>

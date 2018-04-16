@@ -6,8 +6,6 @@ import {Utils} from '../../shared/utils';
 import * as moment from 'moment';
 import {default as swal} from 'sweetalert2';
 import {AuthService} from '../../auth.service';
-import LoggedUser from '../../models/logged-user.model';
-import {Roles} from '../../enum/roles.enum';
 
 @Component({
 	selector: 'app-dashboard',
@@ -16,6 +14,8 @@ import {Roles} from '../../enum/roles.enum';
 	providers: [PageViewService, PurchaseService]
 })
 export class DashboardComponent implements OnInit {
+
+	protected hasPermission = AuthService.hasPermission();
 
 	// Chart colors
 	protected chartColors = Utils.getColorsOptions();
@@ -51,10 +51,6 @@ export class DashboardComponent implements OnInit {
 	}
 
 	ngOnInit() {
-	}
-
-	hasPermission() {
-		return AuthService.hasPermission();
 	}
 
 	getLast30DaysPurchases() {
