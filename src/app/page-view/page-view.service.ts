@@ -11,4 +11,8 @@ export class PageViewService {
 	getCheckoutByPeriod(startDate: number) {
 		return this.httpClient.get(`${environment.api}/pageViews?pageType=checkout&datetime_gte=${startDate}`);
 	}
+
+	getPageViewsByPeriod(startDate: number) {
+		return this.httpClient.get(`${environment.api}/pageViews?datetime_gte=${startDate}`);
+	}
 }

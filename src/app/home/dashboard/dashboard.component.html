@@ -55,6 +55,18 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-md-12 col-lg-6" *ngIf="showConversionChart">
+					<div class="panel panel-default">
+						<div class="panel-heading">Conversão do Checkout (Porcentagem %)
+							<small>últimos 3 meses</small>
+						</div>
+						<div class="panel-body">
+							<canvas baseChart [datasets]="conversionData" [labels]="conversionLabels" [colors]="lineChartColors"
+									[options]="conversionOptions" [chartType]="'bar'">
+							</canvas>
+						</div>
+					</div>
+				</div>
 			</div>
 		</fieldset>
 	</div>

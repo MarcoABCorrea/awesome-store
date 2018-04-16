@@ -32,12 +32,19 @@ export class DashboardComponent implements OnInit {
 	protected checkoutData: Array<any> = [];
 	protected checkoutLabels: string[] = [];
 
+	// Conversion
+	protected conversionOptions = Utils.getChartOptions(null, 0, 20);
+	protected showConversionChart = false;
+	protected conversionData: Array<any> = [];
+	protected conversionLabels: string[] = [];
+
 	constructor(private pageViewService: PageViewService,
 				private purchaseService: PurchaseService) {
 		moment.locale('pt-br');
 		this.getLast30DaysPurchases();
 		this.getBurnDownChartData();
 		this.getCheckoutChartData();
+		this.getPageViewsByPeriod();
 	}
 
 	ngOnInit() {
@@ -145,8 +152,7 @@ export class DashboardComponent implements OnInit {
 				});
 
 				this.showCheckoutChart = true;
-			},
-			() => {
+			}, () => {
 				swal('Erro!', 'Ocorreu um erro ao retornar page views!', 'error');
 			}
 		);
@@ -154,5 +160,46 @@ export class DashboardComponent implements OnInit {
 
 	getPercentage(value: number, total: number) {
 		return Number((value / total) * 100).toFixed(2);
+	}
+
+	getPageViewsByPeriod() {
+		const thisMonth = moment().startOf('month');
+		const referenceMonth = moment(thisMonth).subtract(2, 'month');
+
+		this.pageViewService.getPageViewsByPeriod(referenceMonth.valueOf()).subscribe(
+			(response: Array<any>) => {
+
+				for (let i = 2; i >= 0; i--) {
+					this.conversionLabels.push(_.capitalize(moment(thisMonth).subtract(i, 'month').format('MMMM')));
+				}
+
+				const data = {};
+
+				for (const pageView of response) {
+					const date = moment(pageView.datetime).format('MM');
+
+					if (!data[pageView.pageType]) {
+						data[pageView.pageType] = {first: 0, second: 0, third: 0};
+					}
+
+					if (date === referenceMonth.format('MM')) {
+						data[pageView.pageType].first++;
+					} else if (date === moment(thisMonth).subtract(1, 'month').format('MM')) {
+						data[pageView.pageType].second++;
+					} else if (date === thisMonth.format('MM')) {
+						data[pageView.pageType].third++;
+					}
+				}
+
+				const totalFirst = this.getPercentage(data['checkout'].first, data['purchase'].first);
+				const totalSecond = this.getPercentage(data['checkout'].second, data['purchase'].second);
+				const totalThird = this.getPercentage(data['checkout'].third, data['purchase'].third);
+
+				this.conversionData[0] = {data: [totalFirst, totalSecond, totalThird], label: 'Conversão'};
+
+				this.showConversionChart = true;
+			}, () => {
+				swal('Erro!', 'Ocorreu um erro ao retornar page views!', 'error');
+			});
 	}
 }
